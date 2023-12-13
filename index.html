@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koto Kelime Oyunu</title>
+    <style>
+        body{
+            background-color: black;
+        }
+        input {
+        width: 15%;
+        height: 30%;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // Hedef ifadeyi tanımlayın
+        var targetStrings = [
+            "AHMET",
+            "KEREM",
+        ];
+        // Her kelime için input alanı oluşturun
+        for (var j = 0; j < targetStrings.length; j++) {
+            var targetString = targetStrings[j];
+            var charCount = targetString.length;
+            var correctChars = 0; // Doğru girilen harf sayısını takip eden değişken
+
+            for (var i = 0; i < charCount; i++) {
+                var input = document.createElement("input");
+                input.maxLength = 1; // Her input elemanının maksimum uzunluğu 1 olacak
+                input.type = "text";
+                input.className = "targetStrings" + j + " CharId" + i; // Assign class to each input
+                // Inputa değer girildiğinde
+                input.addEventListener("input", function (event) {
+                    var enteredChar = event.target.value.toUpperCase();
+                    var inputClass  = event.target.className;
+                    var classParts = inputClass.split(" ");
+                    var j, i;
+
+                    for (var part of classParts) {
+                    if (part.startsWith("targetStrings")) {
+                    // "targetStrings" ile başlayan kısmı al ve "j" değerine at
+                    j = parseInt(part.replace("targetStrings", ""), 10);
+                    } else if (part.startsWith("CharId")) {
+                    // "CharId" ile başlayan kısmı al ve "i" değerine at
+                    i = parseInt(part.replace("CharId", ""), 10);
+                }
+            }
+
+                    // Sadece Türkçe harf girişine izin ver
+                    if (/^[A-ZĞÜŞİÖÇ]$/.test(enteredChar)) {
+                        // Girilen harfi büyük harfe dönüştür
+                        event.target.value = enteredChar;
+
+                        // Doğru girilen harfse doğru harf sayısını artır
+                        if (enteredChar === targetString[correctChars]) {
+                            correctChars++;
+                        }
+
+                        // Değer varsa bir sonraki inputa geç
+                        if (correctChars < charCount && event.target.nextElementSibling) {
+                            event.target.nextElementSibling.focus();
+                        }
+                    } else {
+                        // Geçersiz karakteri temizle
+                        event.target.value = "";
+                    }
+
+                    // Kontrol et: İstenilen ifade doğru girildi mi?
+                    var hedefHarf = targetStrings[j].charAt(i);
+                    console.log(enteredChar,hedefHarf,enteredChar === hedefHarf)
+                    if (enteredChar === hedefHarf) {
+                        event.target.disabled = true;
+                    }
+                });
+                
+                // Inputa Backspace tuşuna basıldığında
+                input.addEventListener("keydown", function (event) {
+    // Silme işlemi yapıldıysa ve bir önceki inputtaki değeri silmek istiyorsak
+    if (event.key === "Backspace" && event.target.value === "" && event.target.previousElementSibling) {
+        // Eğer bir önceki input'un disabled özelliği false ise devam et
+        if (!event.target.previousElementSibling.disabled) {
+            event.target.previousElementSibling.value = "";
+            event.target.previousElementSibling.focus();
+            
+            // Doğru girilen harf sayısını azalt
+            correctChars--;
+        }
+    }
+});
+
+
+                document.body.appendChild(input);
+
+                // Her kelimenin sonunda bir line break ekleyin
+                if (i === charCount - 1) {
+                    document.body.appendChild(document.createElement("br"));
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
