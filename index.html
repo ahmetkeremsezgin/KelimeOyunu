@@ -1,106 +1,96 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koto Kelime Oyunu</title>
-    <style>
-        body{
-            background-color: black;
-        }
-        input {
-        width: 15%;
-        height: 30%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Stil tanımlamaları */
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 5px;
+    }
+
+    .grid div {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
 </head>
 <body>
-    <script>
-        // Hedef ifadeyi tanımlayın
-        var targetStrings = [
-            "AHMET",
-            "KEREM",
-        ];
-        // Her kelime için input alanı oluşturun
-        for (var j = 0; j < targetStrings.length; j++) {
-            var targetString = targetStrings[j];
-            var charCount = targetString.length;
-            var correctChars = 0; // Doğru girilen harf sayısını takip eden değişken
+  <div class="grid" id="grid"></div>
 
-            for (var i = 0; i < charCount; i++) {
-                var input = document.createElement("input");
-                input.maxLength = 1; // Her input elemanının maksimum uzunluğu 1 olacak
-                input.type = "text";
-                input.className = "targetStrings" + j + " CharId" + i; // Assign class to each input
-                // Inputa değer girildiğinde
-                input.addEventListener("input", function (event) {
-                    var enteredChar = event.target.value.toUpperCase();
-                    var inputClass  = event.target.className;
-                    var classParts = inputClass.split(" ");
-                    var j, i;
+  <script>
+    // JavaScript kodu
+    document.addEventListener("DOMContentLoaded", function() {
+      // Grid elementini seç
+      const grid = document.getElementById("grid");
 
-                    for (var part of classParts) {
-                    if (part.startsWith("targetStrings")) {
-                    // "targetStrings" ile başlayan kısmı al ve "j" değerine at
-                    j = parseInt(part.replace("targetStrings", ""), 10);
-                    } else if (part.startsWith("CharId")) {
-                    // "CharId" ile başlayan kısmı al ve "i" değerine at
-                    i = parseInt(part.replace("CharId", ""), 10);
-                }
-            }
+      // Harf dizisi
+      const letters = "ABCDEFGHIJKLMNOPRSTUVYZ";
 
-                    // Sadece Türkçe harf girişine izin ver
-                    if (/^[A-ZĞÜŞİÖÇ]$/.test(enteredChar)) {
-                        // Girilen harfi büyük harfe dönüştür
-                        event.target.value = enteredChar;
+      // Bilemce kelimeleri
+      const words = ["AHMET",];
 
-                        // Doğru girilen harfse doğru harf sayısını artır
-                        if (enteredChar === targetString[correctChars]) {
-                            correctChars++;
-                        }
+      // Dikey, yatay veya çapraz yerleştirmeyi kontrol eden değişken
+      const placementType = Math.floor(Math.random() * 3) + 1;
 
-                        // Değer varsa bir sonraki inputa geç
-                        if (correctChars < charCount && event.target.nextElementSibling) {
-                            event.target.nextElementSibling.focus();
-                        }
-                    } else {
-                        // Geçersiz karakteri temizle
-                        event.target.value = "";
-                    }
+      // Kelimelerin başlangıç konumu
+      let startRow, startCol;
 
-                    // Kontrol et: İstenilen ifade doğru girildi mi?
-                    var hedefHarf = targetStrings[j].charAt(i);
-                    console.log(enteredChar,hedefHarf,enteredChar === hedefHarf)
-                    if (enteredChar === hedefHarf) {
-                        event.target.disabled = true;
-                    }
-                });
-                
-                // Inputa Backspace tuşuna basıldığında
-                input.addEventListener("keydown", function (event) {
-    // Silme işlemi yapıldıysa ve bir önceki inputtaki değeri silmek istiyorsak
-    if (event.key === "Backspace" && event.target.value === "" && event.target.previousElementSibling) {
-        // Eğer bir önceki input'un disabled özelliği false ise devam et
-        if (!event.target.previousElementSibling.disabled) {
-            event.target.previousElementSibling.value = "";
-            event.target.previousElementSibling.focus();
-            
-            // Doğru girilen harf sayısını azalt
-            correctChars--;
+      for (const word of words) {
+        if (placementType === 1) {
+          // Yatay yerleştirme
+          startRow = Math.floor(Math.random() * 9);
+          startCol = Math.floor(Math.random() * (9 - word.length));
+        } else if (placementType === 2) {
+          // Dikey yerleştirme
+          startRow = Math.floor(Math.random() * (9 - word.length));
+          startCol = Math.floor(Math.random() * 9);
+        } else if (placementType === 3) {
+          // Çapraz yerleştirme
+          startRow = Math.floor(Math.random() * (9 - word.length));
+          startCol = Math.floor(Math.random() * (9 - word.length));
         }
-    }
-});
 
+        // Kelimeyi yerleştir
+        for (let i = 0; i < word.length; i++) {
+          const div = document.createElement("div");
+          div.textContent = word[i];
+          grid.appendChild(div);
 
-                document.body.appendChild(input);
-
-                // Her kelimenin sonunda bir line break ekleyin
-                if (i === charCount - 1) {
-                    document.body.appendChild(document.createElement("br"));
-                }
-            }
+          if (placementType === 1) {
+            div.style.gridRow = startRow + 1;
+            div.style.gridColumn = startCol + i + 1;
+          } else if (placementType === 2) {
+            div.style.gridRow = startRow + i + 1;
+            div.style.gridColumn = startCol + 1;
+          } else if (placementType === 3) {
+            div.style.gridRow = startRow + i + 1;
+            div.style.gridColumn = startCol + i + 1;
+          }
         }
-    </script>
+      }
+
+      // Geri kalan boş alanları rastgele harflerle doldur
+      for (let i = 0; i < 81 - words.reduce((acc, word) => acc + word.length, 0); i++) {
+        const div = document.createElement("div");
+        div.textContent = letters[Math.floor(Math.random() * letters.length)];
+        grid.appendChild(div);
+      }
+    });
+  </script>
 </body>
-
 </html>
