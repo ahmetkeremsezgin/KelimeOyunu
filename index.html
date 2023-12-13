@@ -31,66 +31,163 @@
 </head>
 <body>
   <div class="grid" id="grid"></div>
-
   <script>
-    // JavaScript kodu
-    document.addEventListener("DOMContentLoaded", function() {
-      // Grid elementini seç
-      const grid = document.getElementById("grid");
+    document.addEventListener("DOMContentLoaded", function () {
+  // Grid elementini seç
+  const grid = document.getElementById("grid");
 
-      // Harf dizisi
-      const letters = "ABCDEFGHIJKLMNOPRSTUVYZ";
+  // Harf dizisi
+  const letters = "ABCDEFGHIJKLMNOPRSTUVYZ";
 
-      // Bilemce kelimeleri
-      const words = ["AHMET",];
+  // Bilemce kelimeleri
+  const words = ["AHMET", "KEREM", "SEZGİN"];
 
-      // Dikey, yatay veya çapraz yerleştirmeyi kontrol eden değişken
-      const placementType = Math.floor(Math.random() * 3) + 1;
+  const isCellOccupied = (row, col) => {
+    return Array.from(grid.children).some(
+      (child) =>
+        parseInt(child.style.gridRow) === row && parseInt(child.style.gridColumn) === col
+    );
+  };
 
-      // Kelimelerin başlangıç konumu
-      let startRow, startCol;
+  var x = 0;
+  for (const word of words) {
+    // Rastgele yerleştirme tipi seç
+    const placementType = Math.floor(Math.random() * 3) + 1;
 
-      for (const word of words) {
-        if (placementType === 1) {
-          // Yatay yerleştirme
-          startRow = Math.floor(Math.random() * 9);
-          startCol = Math.floor(Math.random() * (9 - word.length));
-        } else if (placementType === 2) {
-          // Dikey yerleştirme
-          startRow = Math.floor(Math.random() * (9 - word.length));
-          startCol = Math.floor(Math.random() * 9);
-        } else if (placementType === 3) {
-          // Çapraz yerleştirme
-          startRow = Math.floor(Math.random() * (9 - word.length));
-          startCol = Math.floor(Math.random() * (9 - word.length));
+    // Başlangıç konumunu rastgele belirle
+    let startRow, startCol;
+
+    let wordPlaced = false;
+
+    while (!wordPlaced) {
+      if (placementType === 1) {
+        // Yatay yerleştirme
+        startRow = Math.floor(Math.random() * 9);
+        startCol = Math.floor(Math.random() * (9 - word.length));
+
+        if (!Array.from({ length: word.length }).some((_, i) => isCellOccupied(startRow + 1, startCol + i + 1))) {
+          wordPlaced = true;
         }
+      } else if (placementType === 2) {
+        // Dikey yerleştirme
+        startRow = Math.floor(Math.random() * (9 - word.length));
+        startCol = Math.floor(Math.random() * 9);
 
-        // Kelimeyi yerleştir
-        for (let i = 0; i < word.length; i++) {
-          const div = document.createElement("div");
-          div.textContent = word[i];
-          grid.appendChild(div);
+        if (!Array.from({ length: word.length }).some((_, i) => isCellOccupied(startRow + i + 1, startCol + 1))) {
+          wordPlaced = true;
+        }
+      } else if (placementType === 3) {
+        // Çapraz yerleştirme
+        startRow = Math.floor(Math.random() * (9 - word.length));
+        startCol = Math.floor(Math.random() * (9 - word.length));
 
-          if (placementType === 1) {
-            div.style.gridRow = startRow + 1;
-            div.style.gridColumn = startCol + i + 1;
-          } else if (placementType === 2) {
-            div.style.gridRow = startRow + i + 1;
-            div.style.gridColumn = startCol + 1;
-          } else if (placementType === 3) {
-            div.style.gridRow = startRow + i + 1;
-            div.style.gridColumn = startCol + i + 1;
-          }
+        if (!Array.from({ length: word.length }).some((_, i) => isCellOccupied(startRow + i + 1, startCol + i + 1))) {
+          wordPlaced = true;
         }
       }
+    }
 
-      // Geri kalan boş alanları rastgele harflerle doldur
-      for (let i = 0; i < 81 - words.reduce((acc, word) => acc + word.length, 0); i++) {
-        const div = document.createElement("div");
-        div.textContent = letters[Math.floor(Math.random() * letters.length)];
-        grid.appendChild(div);
+    // Kelimeyi yerleştir
+    for (let i = 0; i < word.length; i++) {
+      const div = document.createElement("div");
+      div.textContent = word[i];
+      grid.appendChild(div);
+
+      if (placementType === 1) {
+        div.style.gridRow = startRow + 1;
+        div.style.gridColumn = startCol + i + 1;
+      } else if (placementType === 2) {
+        div.style.gridRow = startRow + i + 1;
+        div.style.gridColumn = startCol + 1;
+      } else if (placementType === 3) {
+        div.style.gridRow = startRow + i + 1;
+        div.style.gridColumn = startCol + i + 1;
+      }
+      div.classList.add("pressed-cell");
+      div.id = "id"+x
+      x++
+    }
+  }
+
+  // Geri kalan boş alanları rastgele harflerle doldur
+  for (let i = 0; i < 81 - words.reduce((acc, word) => acc + word.length, 0); i++) {
+    const div = document.createElement("div");
+    div.id = "id"+x
+    div.textContent = letters[Math.floor(Math.random() * letters.length)];
+    grid.appendChild(div);
+    x++
+  }
+
+
+var elementsWithCharClass = document.querySelectorAll('div[id^="id"]');
+
+var clickedDivs = [];
+var clickedDivsid = [];
+
+elementsWithCharClass.forEach(function (element) {
+    element.addEventListener('click', function () {
+      if (element.style.backgroundColor !== 'green') {
+        // Eğer arka plan rengi sarı ise, rengi kaldır; değilse sarı yap
+        if (element.style.backgroundColor === 'yellow') {
+            element.style.backgroundColor = ''; // Remove the background color
+            const indexToRemove = clickedDivs.indexOf(element.textContent);
+            if (indexToRemove !== -1) {
+                clickedDivs.splice(indexToRemove, 1); // Remove the element from the array
+            }
+
+            const idIndexToRemove = clickedDivsid.indexOf(element.id);
+            if (idIndexToRemove !== -1) {
+                clickedDivsid.splice(idIndexToRemove, 1); // Remove the id from the array
+            }
+        } else {
+            element.style.backgroundColor = 'yellow'; // Set the background color to yellow
+            clickedDivs.push(element.textContent);
+            clickedDivsid.push(element.id);
+
+        }
+        var metin = "";
+
+        for (let i = 0; i < clickedDivs.length; i++) {
+            metin += clickedDivs[i];
+            if (stringIncludes(metin, words) && checkRhythmicIds(clickedDivsid)) {
+              for (let j = 0; j < clickedDivsid.length; j++) {
+              let currentDiv = document.getElementById(clickedDivsid[j]);
+              if (currentDiv) {
+              // Change the background color to green
+              currentDiv.style.backgroundColor = 'green';
+            }
+          }
+          clickedDivs = [];
+          clickedDivsid = [];
+
+            }
+        }
       }
     });
+});
+
+});
+function stringIncludes(string, dizi) {
+  for (let i = 0; i < dizi.length; i++) {
+    if (string === dizi[i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function checkRhythmicIds(arr) {
+  const numericArray = arr.map(id => parseInt(id.replace('id', ''), 10));
+  const sortedArray = numericArray.sort((a, b) => a - b);
+
+  for (let i = 0; i < sortedArray.length - 1; i++) {
+    if (sortedArray[i] + 1 !== sortedArray[i + 1]) {
+      return false;
+    }
+  }
+
+  return true;
+}
   </script>
 </body>
 </html>
