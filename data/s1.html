@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+    background-image: url('background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+
+    .container {
+    display: flex;
+    width: 100%; /* Genişliği yüzde 100 olarak ayarlayın */
+    z-index: 2; /* Add a higher z-index */
+    }
+
+    .grid {
+    margin-left: 10%; /* İsteğe bağlı: sayfa ve grid arasına boşluk eklemek için */
+    border: 5px solid #4D1C06;
+    background-color: #e3d9d27c;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    height: 90vh; /* Örneğin, viewport yüksekliğinin 80% kadarı */
+    width: 40%; /* Örneğin, viewport genişliğinin 50% kadarı */
+    }
+
+    .page {
+    height: 90vh;
+    width: 40%;
+    background-image: url('page.png');
+    background-repeat: no-repeat;
+    background-size: contain; /* veya cover */
+    overflow: hidden;
+    margin-left: 10%;
+    }
+
+    .grid div {
+    cursor: grab;
+    color: rgb(0, 0, 0);
+    border: 1px solid #4D1C06;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    ul {
+    list-style-type: none;
+    list-style-position: outside;
+    padding: 0;
+    }
+
+    h3 {
+    font-size: 3vw;
+    padding-right: 2vw; 
+    }
+    
+    li {
+    margin-left: 3vw;
+    font-size: 2vh;  
+    }
+    
+    .kelimeler {
+    padding-top: 1vh; 
+    margin-left: 3vw; 
+    }
+
+    #popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 40%;
+  font-weight: 100;
+  background-image: url(yunusemre.jpeg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: 20px;
+  border-radius: 30px;
+  display: none;
+  animation: fadeInOut 3s forwards;
+  overflow-y: auto;
+  font-size: xx-large;
+  z-index: 1; /* Lower z-index compared to the container */
+  pointer-events: none;
+}
+
+    @keyframes fadeInOut {
+      0%, 100% {
+        opacity: 0;
+      }
+      10%, 90% {
+        opacity: 1;
+      }
+    }
+
+  @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      /* 600 pikselden küçük ekranlar için stil tanımlamaları */
+      .grid {
+        font-size: 3vw; /* Örneğin, viewport genişliğinin 3% kadarı */
+      }
+    }
+
+    @media screen and (min-width: 1200px) {
+      /* 1200 pikselden büyük ekranlar için stil tanımlamaları */
+      .grid {
+        font-size: 2vw; /* Örneğin, viewport genişliğinin 2% kadarı */
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="popup">
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="page">
+      <div class="kelimeler">
+        <h3>KELİMELER</h3>
+      </div>
+      <ul id="wordList">
+        <!-- List items will be dynamically generated here -->
+      </ul>
+    </div>
+  </div>
+  <script src="data.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Grid elementini seç
+      var tik = new Audio('tık.mp3');
+      var basari = new Audio('sucsess.mp3');
+
+      const grid = document.getElementById("grid");
+
+      console.log("Data Word: " + wordsAnswerOsmanli.length) 
+
+      const maxSelectCount = 3;
+      
+      // Boş diziler
+      const words = [];
+      const wordsAnswer = [];
+      const wordsSiir = [];
+      // Rasgele indexler
+      const randomIndexes = [];
+      
+      let i = 0;
+      while (i < maxSelectCount) {
+      const randomIndex = Math.floor(Math.random() * wordsOsmanli.length);
+
+      if (!randomIndexes.includes(randomIndex)) {
+      randomIndexes.push(randomIndex);
+      words.push(wordsOsmanli[randomIndex]);
+      wordsAnswer.push(wordsAnswerOsmanli[randomIndex]);
+      wordsSiir.push(wordsSiirOsmanli[randomIndex]);
+      i++; // i'yi artır
+      }
+}
+
+      const wordsLenght = words.length
+
+      const wordList = document.getElementById("wordList");
+
+      // Populate the word list dynamically with answers (initially hidden)
+      for (let i = 0; i < words.length; i++) {
+      const listItem = document.createElement("li");
+      listItem.textContent = words[i] ; //+ ":"
+      listItem.classList.add("hidden-answer"); // Add a class to hide initially
+      listItem.setAttribute("data-answer", wordsAnswer[i]); // Add answer data
+      wordList.appendChild(listItem);
+      }
+
+      const isCellOccupied = (row, col) => {
+        return Array.from(grid.children).some(
+          (child) =>
+            parseInt(child.style.gridRow) === row && parseInt(child.style.gridColumn) === col
+        );
+      };
+      var listItems = document.getElementById("wordList").getElementsByTagName("li");
+      var listItemsArray = [];
+
+      for (var j = 0; j < listItems.length; j++) {
+      listItemsArray.push(listItems[j].textContent || listItems[j].innerText);
+      }
+
+      var x = 0;
+      for (const word of words) {
+        // Rastgele yerleştirme tipi seç
+        const placementType = Math.floor(Math.random() * 3) + 1;
+
+        // Başlangıç konumunu rastgele belirle
+        let startRow, startCol;
+
+        let wordPlaced = false;
+        var say = 0
+        var refresh = false
+        while (!wordPlaced) {
+          if (placementType === 1) {
+            // Yatay yerleştirme
+            startRow = Math.floor(Math.random() * 9);
+            startCol = Math.floor(Math.random() * (9 - word.length));
+
+            if (!Array.from({ length: word.length }).some((_, i) => isCellOccupied(startRow + 1, startCol + i + 1))) {
+              wordPlaced = true;
+            }
+          } else if (placementType === 2) {
+            // Dikey yerleştirme
+            startRow = Math.floor(Math.random() * (9 - word.length));
+            startCol = Math.floor(Math.random() * 9);
+
+            if (!Array.from({ length: word.length }).some((_, i) => isCellOccupied(startRow + i + 1, startCol + 1))) {
+              wordPlaced = true;
+            }
+          } else if (placementType === 3) {
+            // Çapraz yerleştirme
+            startRow = Math.floor(Math.random() * (9 - word.length));
+            startCol = Math.floor(Math.random() * (9 - word.length));
+
+            if (!Array.from({ length: word.length }).some((_, i) => isCellOccupied(startRow + i + 1, startCol + i + 1))) {
+              wordPlaced = true;
+            }
+          }
+          say++
+          if(say > 50){
+            refresh = true
+            console.log("Kelime Yerleştirmede Hata Var Senin İçin Sayfayı Yeniliyroum")
+            break
+          }
+        }
+        if(refresh){
+          window.location.reload()
+        }
+        // Kelimeyi yerleştir
+        for (let i = 0; i < word.length; i++) {
+          const div = document.createElement("div");
+          div.textContent = word[i];
+          grid.appendChild(div);
+
+          if (placementType === 1) {
+            div.style.gridRow = startRow + 1;
+            div.style.gridColumn = startCol + i + 1;
+          } else if (placementType === 2) {
+            div.style.gridRow = startRow + i + 1;
+            div.style.gridColumn = startCol + 1;
+          } else if (placementType === 3) {
+            div.style.gridRow = startRow + i + 1;
+            div.style.gridColumn = startCol + i + 1;
+          }
+          div.classList.add("pressed-cell");
+          div.id = "id" + x;
+          x++;
+        }
+      }
+
+      // Geri kalan boş alanları rastgele harflerle doldur
+      for (let i = 0; i < 9*9 - words.reduce((acc, word) => acc + word.length, 0); i++) {
+        const div = document.createElement("div");
+        div.id = "id" + x;
+        div.textContent = letters[Math.floor(Math.random() * letters.length)];
+        grid.appendChild(div);
+        x++;
+      }
+
+      var elementsWithCharClass = document.querySelectorAll('div[id^="id"]');
+
+      var clickedDivs = [];
+      var clickedDivsid = [];
+      let trueWords = 0;
+      elementsWithCharClass.forEach(function (element) {
+        element.addEventListener('click', function () {
+          if (element.style.backgroundColor !== 'seagreen') {
+            // Eğer arka plan rengi sarı ise, rengi kaldır; değilse sarı yap
+            if (element.style.backgroundColor === 'orange') {
+              element.style.backgroundColor = ''; // Remove the background color
+              const indexToRemove = clickedDivs.indexOf(element.textContent);
+              if (indexToRemove !== -1) {
+                clickedDivs.splice(indexToRemove, 1); // Remove the element from the array
+              }
+
+              const idIndexToRemove = clickedDivsid.indexOf(element.id);
+              if (idIndexToRemove !== -1) {
+                clickedDivsid.splice(idIndexToRemove, 1); // Remove the id from the array
+              }
+            } else {
+              element.style.backgroundColor = 'orange';
+              clickedDivs.push(element.textContent);
+              clickedDivsid.push(element.id);
+
+            }
+            var metin = "";
+          let showPopupBool = true;
+
+// Function to generate a random number between min and max (inclusive)
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+for (let i = 0; i < clickedDivs.length; i++) {
+  metin += clickedDivs[i];
+  if (stringIncludes(metin, words) && checkRhythmicIds(clickedDivsid)) {
+    trueWords++;
+    for (let j = 0; j < clickedDivsid.length; j++) {
+      let currentDiv = document.getElementById(clickedDivsid[j]);
+      for (var z = 0; z < listItems.length; z++) {
+
+        //kanzi
+        if (stringIncludes(metin,listItemsArray)) {
+          revealAnswerForWord(listItemsArray[liIndex]);
+
+          // Introduce a random check before executing showPopupMessage
+          if (getRandomInt(1, 100) <= 50) {
+            if (showPopupBool) {
+              showPopupMessage(wordsSiir[z]);
+              showPopupBool = false;
+            } else {
+              showPopupBool = true;
+            }
+          }
+        }
+      }
+
+      currentDiv.style.backgroundColor = 'seaGreen';
+
+      if (trueWords == wordsLenght) {
+        setTimeout(function () {
+          window.location.href = "s2.html";
+        }, 4000);
+      }
+    }
+
+                basari.play();
+                clickedDivs = [];
+                clickedDivsid = [];
+              }
+            }
+            tik.play();
+          }
+        });
+      });
+
+      function revealAnswerForWord(matchingWord) {
+      const listItems = document.querySelectorAll('#wordList li');
+  
+      listItems.forEach(item => {
+    const wordWithoutColon = item.textContent.replace(':', '');
+    if (wordWithoutColon === matchingWord) {
+      item.textContent += ' ' + item.getAttribute('data-answer');
+      item.classList.remove('hidden-answer');
+    }
+  });
+      }
+
+      var liIndex = 0
+
+      function stringIncludes(string, dizi) {
+      for (let i = 0; i < dizi.length; i++) {
+      if (isMatching(string, dizi[i])) {
+      liIndex = i; 
+      return true;
+        }
+      }
+      return false;
+      }
+
+      function isMatching(str1, str2) {
+      // Küçük harfe dönüştürüp, sırasız şekilde karşılaştırma yapar
+        return str1.toLowerCase().split('').sort().join('') === str2.toLowerCase().split('').sort().join('');
+      }
+
+      function checkRhythmicIds(arr) {
+        const numericArray = arr.map(id => parseInt(id.replace('id', ''), 10));
+        const sortedArray = numericArray.sort((a, b) => a - b);
+
+        for (let i = 0; i < sortedArray.length - 1; i++) {
+          if (sortedArray[i] + 1 !== sortedArray[i + 1]) {
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      function showPopupMessage(message) {
+  message = "YUNUS EMRE /DÎVANI'NDAN ! "+message
+  var popup = document.getElementById("popup");
+  var parts = message.split("/");
+
+  // Her bir parçayı yeni bir satıra yerleştirelim
+  var formattedMessage = parts.join("<br>");
+
+  // Başlık oluştur
+  var title = document.createElement("h2");
+
+  // Başlığı metnin başındaki ünlem hariç alalım
+  var titleText = formattedMessage.substring(0, formattedMessage.indexOf("!") + 1).replace("!", "");
+  title.innerHTML = titleText;
+
+  // Popup içeriğini güncel metinle değiştirelim (başlık hariç)
+  var popupContent = formattedMessage.substring(formattedMessage.indexOf("!") + 1);
+  popup.innerHTML = popupContent;
+
+  // Başlığı popup'a ekle
+  popup.insertBefore(title, popup.firstChild);
+
+  popup.style.display = "block";
+
+  // Belirli bir süre sonra metni gizle
+  setTimeout(function () {
+    popup.style.display = "none";
+  }, message.length * 1000); // 10 saniye sonra gizle
+}
+
+    });
+  </script>
+</body>
+</html>
