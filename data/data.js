@@ -3,7 +3,7 @@
 
  // Bilemce kelimeleri
  const wordsOsmanli = [
-  "GÖNÜL","YÜZ","TAPU","NAZAR","HAYIR","TECELLİ","MELÜL","NİŞAN","MİSKİN","CEVHER","SEFA","MÜYESSER",
+  "NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET",
   "ERKAN","REYHAN","ACEB","MUHAMMED","KABİR","KEVSER","DİDAR","ALEM","TEVHİT","HALİS","KATRAN","DİRLİK",
   "SEHER","MÜNKİR","ARİF","MİNBER","MAŞUK","TÖVBE"
  ];
