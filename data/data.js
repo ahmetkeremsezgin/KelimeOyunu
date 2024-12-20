@@ -3,13 +3,13 @@
 
  // Bilemce kelimeleri
  const wordsOsmanli = [
-  "NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET","NUKET",
+  "NUKET","YÜZ","TAPU","NAZAR","HAYIR","TECELLİ","MELÜL","NİŞAN","MİSKİN","CEVHER","SEFA","MÜYESSER",
   "ERKAN","REYHAN","ACEB","MUHAMMED","KABİR","KEVSER","DİDAR","ALEM","TEVHİT","HALİS","KATRAN","DİRLİK",
   "SEHER","MÜNKİR","ARİF","MİNBER","MAŞUK","TÖVBE"
  ];
 
  const wordsAnswerOsmanli = [
- "Sevgi,istek,düşünüş,yürek,kalp","Beniz,sima,çehre,surat,yüzey...","Bir taşınmazın üstündeki mülkiyet hakkını gösteren belge","Bakış,bakma,gözatma...","İyilik karşılık beklemden yapılan yardım,hayırlı yararlı olan...",
+ "2. Picasso",
  "Belirme, görünme, ortaya çıkma, meydana çıkma","Üzgün,boyunu bükük...","İz,belirti,evlenmek üzere söz verme...","Çok uyuşuk olan kimse","Bir şeyin özü,iyi yetenek,mücevher", 
  "Rahat,kaygısız ve sakin olma","Kolaylıkla ortaya çıkan.",
   "Bir topluluğu ileri gelenleri,büyükler,üstler,yol yordam","fesleğen.","Merak,kararsızlık veya kuşku anlatan bir söz.","Övülmüş,methedilmiş,güzel huylu,hoşgörülü",
@@ -19,7 +19,7 @@
  ];
 
  const wordsSiirOsmanli = [
- "Kemdürür yoksulluktan nicelerin varlığı/Bunca varlık var iken gitmez gönül darlığı",
+ "2. Picasso",
  "Söze tarih yidi yüz yidi yidi-y-idi/Yunus canı bu yolda fidi-y-idi",
  "Tapduğunun tapusunda kul olduk kapusunda/Yunus miskin çiğ idik piştik elhamdülillah",
  "Mevlana Hüdavendgar bize nazar kıldı/Onun görklü nazarı gönlümüzün aynasıdır",
